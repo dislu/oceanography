@@ -1,3 +1,4 @@
+'''This program automate generation and manipulation of netCDF files'''
 from netCDF4 import Dataset as nc
 from netCDF4 import num2date
 import numpy as np
