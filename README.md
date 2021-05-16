@@ -1,2 +1,2 @@
 # oceanography
-Programs for filling missing values in netcdf files using python
+Programs for data manipulation of netcdf files using python
