@@ -1,3 +1,4 @@
+'''This program is for merging daily netCDF files, comprising missing files, into a one large netCDF file'''
 from netCDF4 import Dataset as nc
 from netCDF4 import num2date, date2num
 from datetime import datetime, timedelta
