@@ -1,4 +1,5 @@
 #!/usr/bin/python
+'''This programme converts excel files having uneven timesteps into an even timesteps netcdf files   '''
 import pandas as pd
 import time
 import datetime as dt
@@ -10,7 +11,7 @@ from netCDF4 import Dataset as ncd
 from mknc_omni_3d_uvts import make_ncuv
 from mknc_omni_3d_uvts import make_ncts
 from netcdftime import utime
-
+# this function convert time from string format to numerical format
 def dt2jd(dte):
     import time
     import datetime as dt
@@ -23,7 +24,7 @@ def dt2jd(dte):
     dateDiff = dtg - dtgref
     jd=dateDiff.days
     return(jd,ndtg)
-
+# convert excel file to netCDF file format
 def excel2nc(infl):
     nctime=utime('days since 1900-12-31 00:00:00')
     dfrmt=('%d.%m.%y %H:%M:%S')
