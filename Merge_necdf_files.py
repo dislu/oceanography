@@ -1,4 +1,4 @@
-'''This program is for merging daily netCDF files, comprising missing files, into a one large netCDF file'''
+'''This program is for merging daily netCDF files having uneven timesteps, missing files, into a one large even timestep netCDF file. creates missing entries for missing files'''
 from netCDF4 import Dataset as nc
 from netCDF4 import num2date, date2num
 from datetime import datetime, timedelta
@@ -29,13 +29,7 @@ for var in L_Dimensions:
 # store names of variables in a list
 Variable_Names = [var for var in S_nf.variables.keys()]
 for Name in Variable_Names:
-#    if(len(nf.variables[var].dimensions)==1):
-      df.createVariable(Name,nf.variables[Name].dtype.name,nf.variables[Name].dimensions)
- #   else : 
-  #    temp = list(nf.variables[Name].dimensions)
-   #   temp.insert(0,'time')
-    #  Tem = tuple(temp)
-     # df.createVariable(Name,nf.variables[Name].dtype.name,Tem)
+    df.createVariable(Name,nf.variables[Name].dtype.name,nf.variables[Name].dimensions)
 #create attributes
 # create global attributes
 # Loop for assigning attributes from nf to df
@@ -58,13 +52,13 @@ for var in Variable_Names:
     if(len(S_nf.variables[var].dimensions)==1):
       df.variables[var][:]= S_nf.variables[var][:]
 
-End_nf = nc(Sort_files[len(Sort_files)-1])
-Start_date = num2date(S_nf.variables['time'][0],units = nf.variables['time'].units)
-End_date = num2date(End_nf.variables['time'][0],units=nf.variables['time'].units)
+End_nf = nc(Sort_files[len(Sort_files)-1]) # take last file
+Start_date = num2date(S_nf.variables['time'][0],units = nf.variables['time'].units) # starting date
+End_date = num2date(End_nf.variables['time'][0],units=nf.variables['time'].units)   # end date
  
-NO_days,No_seconds = (End_date-Start_date).days,(End_date-Start_date).seconds
+NO_days,No_seconds = (End_date-Start_date).days,(End_date-Start_date).seconds  # time spam in days and seconds
 print(Start_date,End_date)
-No_hours = NO_days*24 + No_seconds// 3600
+No_hours = NO_days*24 + No_seconds// 3600  # convert time into hours
 print("No_observation=",No_hours)
 real_dates= [datetime(Start_date.year,Start_date.month,Start_date.day,Start_date.hour,Start_date.minute,Start_date.second)+n*timedelta(hours=3) for n in range(int(No_hours/3)+1)]
 df.variables['time'][:] = date2num(real_dates,units = nf.variables['time'].units)
@@ -79,19 +73,19 @@ for files in Sort_files:
         if(len(file.variables[var].dimensions)!=len(nf.variables[var].dimensions)):
             print(files,var,"Dimensions not equal")
       except:
-        print(files,var,"Variable name doesn't exist")
+        print(files,var,"Variable name doesn't exist")  # if file don't have common variable
     T_end = num2date(file.variables['time'][0],units = nf.variables['time'].units)
     duration = T_end-T_start
     days, seconds = duration.days, duration.seconds
     hours = days * 24 + seconds // 3600
             
-    Miss_files=int(hours/3)-1
+    Miss_files=int(hours/3)-1  # calculating missing files
       # code for filling missing files as masked values
     print(len(real_dates),T_start,T_end,Miss_files)
     #    print(Miss_files)
     if(Miss_files<0):
       continue
-
+ # if missing files exists
     if(Miss_files>0):
        for i in range(Miss_files):
            for Name in Variable_Names:
@@ -104,6 +98,7 @@ for files in Sort_files:
                    df.variables[Name][Total_file,:,:]=ma.masked_where(nf.variables[Name][0,:,:]>-280,nf.variables[Name][0,:,:],True)
            Total_file=Total_file+1
     print(Total_file,Variable_Names)
+    # filling non mssing entries
     for Name in Variable_Names:
         print(" time_len ",len(file.variables['time']),files)
         if(len(df.variables[Name].dimensions)>1):
@@ -113,7 +108,7 @@ for files in Sort_files:
             df.variables[Name][Total_file,:,:]=file.variables[Name][:,:]
     Total_file=Total_file+1
     T_start = T_end
-    file.close()
+    file.close() # closing file
 
     
 nf.close()
