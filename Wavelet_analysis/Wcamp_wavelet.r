@@ -4,8 +4,9 @@ library(zoo)
 library(WaveletComp)
 library(dplR)
 R_path<-"C:\Users\INCOIS\OneDrive\Documents\arvindt\Incois_nc"
-ncname1<-"gfs_IOy_avg"
-ncname2<-"mld_IOy_avg"
+ncname1<-"gfs_IOy_avg" # Wind speed data
+ncname2<-"mld_IOy_avg" # mixed layser depth 
+## import netCDF data in R
 ncfname1<- paste(R_path, ncname1, ".nc", sep="")
 ncfname2<- paste(R_path, ncname2, ".nc", sep="")
 df1<-nc_open(ncfname1)
@@ -18,6 +19,7 @@ Wind_speed_Sq<-(df1_gfsu)^2+(df1_gfsv)^2
 df2_mld<-ncvar_get(df2,"MLD_AVG")
 #df1_Preci_R<-ncvar_get(df1,"PRATE_SURFACE_AVG")
 #df1_DSWFR<-ncvar_get(df1,"DLWRF_SURFACE_AVG")
+## create date time axis
 dates<-seq.dates("01/01/2012",by="days",length. = 1826)
 T1<-cbind(dates,Wind_speed_Sq)
 T2<-cbind(dates,df2_mld)
