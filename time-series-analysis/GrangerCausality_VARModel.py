@@ -1,6 +1,6 @@
 x='/incois_ncmrwfx/incois/hycom/ARVIND_SINGH/HYCOM_TS/BOX/2012-16/avg/Weekly_gfs_BOB_avg.nc'
 y='/incois_ncmrwfx/incois/hycom/ARVIND_SINGH/HYCOM_TS/BOX/2012-16/avg/Weekly_mld_BOB_avg.nc'
-# %load Pdf_reg.py 
+# %load pre_processing_statics_funs.py
 import matplotlib.pyplot as plt    
 import pandas as pd                                                      
 plt.style.use('classic')                   
